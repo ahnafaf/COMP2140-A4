@@ -1,19 +1,22 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
+
 public class ahnaf_table {
-    private int TABLE_SIZE = 2097;
-    Node root;
+    public static class tablebst {
+    static private int TABLE_SIZE = 2097;
+    static Node root;
 
     public static void main(String[] args) {
-        ahnaf_table table = new ahnaf_table();
-        table.insert("Hello");
-        table.insert("World");
-        System.out.println("Inserted 'Hello' and 'World' into the table.");
-
-        // Example search operations
-        System.out.println("Searching for 'Hello': " + table.search("Hello")); // true
-        System.out.println("Searching for 'NotExist': " + table.search("NotExist")); // false
+        tablebst table1 = new tablebst();
+        Table(args[0]); // read from file
+        table1.print();    
     }
 
-    class Node {
+    static class Node {
         String word;
         int hashKey;
         Node left;
@@ -26,7 +29,7 @@ public class ahnaf_table {
         }
     }
 
-    public void insert(String word) {
+    public static void insert(String word) {
         int hashKey = hash(word);
         Node newNode = new Node(word, hashKey);
 
@@ -53,14 +56,15 @@ public class ahnaf_table {
                     return;
                 }
             } else {
-                // If the hashKey is equal to current, you might want to either update the current node
+                // If the hashKey is equal to current, you might want to either update the
+                // current node
                 // or handle duplicates as per your requirements.
                 return;
             }
         }
     }
 
-    public boolean search(String word) {
+    public static boolean search(String word) {
         int hashKey = hash(word);
         Node current = root;
 
@@ -77,21 +81,55 @@ public class ahnaf_table {
         return false; // hashKey not found
     }
 
+    private static int hash(String word) {
+        final int HASHING_CONSTANT = 13; // a small prime number
+        int lastCharIndex = word.length() - 1;
+        int hash = (int) word.charAt(lastCharIndex) % TABLE_SIZE;
+        for (int i = lastCharIndex - 1; i >= 0; i--) {
+            hash *= HASHING_CONSTANT;
+            hash += (int) word.charAt(i);
+            hash %= TABLE_SIZE;
+        }
+        return hash;
+    }
 
-    private int hash(String word) {
-		final int HASHING_CONSTANT = 13; // a small prime number
-		/*
-		 * Use Horner's method to compute the polynomial hash function efficiently.
-		 * Apply the modulo operation after each step.
-		 */
-		int lastCharIndex = word.length() - 1;
-		int hash = (int) word.charAt(lastCharIndex) % TABLE_SIZE;
-		for (int i = lastCharIndex - 1; i >= 0; i--) {
-			hash *= HASHING_CONSTANT;
-			hash += (int) word.charAt(i);
-			hash %= TABLE_SIZE;
-		}
-	    return hash;
-	}
+    public static void Table(String fileName) {
+        try {
+            File myObj = new File(fileName);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] array1 = data.split(" ");
+                String str = array1.toString();
+                // Check if word is empty
+                if (data.length() == 0) {
+                    continue;
+                }
+                for (int i = 0; i < array1.length; i++) {
+                    insert(array1[i]);
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    private final static String SPACE = "    "; // four spaces for indentation
+
+    public void print() {
+        printSideways(root, 0);
+    }
+
+    private static void printSideways(Node current, int level) {
+        if (current == null) {
+            return;
+        }
+        printSideways(current.right, level + 1);
+        System.out.println(String.format("%s%s", SPACE.repeat(level), current.word));
+        printSideways(current.left, level + 1);
+    }
 }
 
+}

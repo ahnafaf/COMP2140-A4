@@ -1,0 +1,17 @@
+An Abstract Data Type (ADT) consists of the following.
+
+A data structure: a collection of data, together with the structure, organization, and properties of that data.
+
+The operations that can be performed: what the user can do to look at, manipulate or change the data.
+
+The interface between the ADT and the user -- that is, the operations that the user is able to perform -- provides a contract between the ADT and the user.
+
+The ADT supplies a set of operations and guarantees what the outcome of each operation will be.
+
+The user agrees to use only the operations supplied by the interface.
+
+The interface hides implementation details. This allows the developer to change those implementation details without affecting the user's code.
+
+
+
+

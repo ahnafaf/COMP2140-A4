@@ -1,3 +1,14 @@
+//-------------------------------------------
+// NAME: Ahnaf Ahsan
+// STUDENT NUMBER: 7966487
+// COURSE: COMP 2140, SECTION: A02
+// INSTRUCTOR: A. Maghdoust
+// ASSIGNMENT: assignment 4
+// QUESTION: question 1
+//
+// REMARKS: Table ADT using BST
+//-------------------------------------------
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -5,16 +16,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class ahnaf_table {
-    public static class tablebst {
+class Table {
     static private int TABLE_SIZE = 2097;
     static Node root;
-
-    public static void main(String[] args) {
-        tablebst table1 = new tablebst();
-        Table(args[0]); // read from file
-        table1.print();    
-    }
 
     static class Node {
         String word;
@@ -29,7 +33,31 @@ public class ahnaf_table {
         }
     }
 
+    Table(String fileName) {
+        try {
+            File myObj = new File(fileName);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] array1 = data.split(" ");
+                String str = array1.toString();
+                // Check if word is empty
+                if (data.length() == 0) {
+                    continue;
+                }
+                for (int i = 0; i < array1.length; i++) {
+                    insert(array1[i]);
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public static void insert(String word) {
+        assert word != null;
         int hashKey = hash(word);
         Node newNode = new Node(word, hashKey);
 
@@ -65,6 +93,7 @@ public class ahnaf_table {
     }
 
     public static boolean search(String word) {
+        assert word != null;
         int hashKey = hash(word);
         Node current = root;
 
@@ -81,7 +110,18 @@ public class ahnaf_table {
         return false; // hashKey not found
     }
 
+//-------------------------------------------------------
+// hash
+//
+// PURPOSE: hash a string to an integer
+// PARAMETERS:
+// String word: the string to be hashed
+// RETURN:
+// int: the hash value of the string
+//-------------------------------------------------------
+
     private static int hash(String word) {
+        assert word != null;
         final int HASHING_CONSTANT = 13; // a small prime number
         int lastCharIndex = word.length() - 1;
         int hash = (int) word.charAt(lastCharIndex) % TABLE_SIZE;
@@ -91,29 +131,6 @@ public class ahnaf_table {
             hash %= TABLE_SIZE;
         }
         return hash;
-    }
-
-    public static void Table(String fileName) {
-        try {
-            File myObj = new File(fileName);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] array1 = data.split(" ");
-                String str = array1.toString();
-                // Check if word is empty
-                if (data.length() == 0) {
-                    continue;
-                }
-                for (int i = 0; i < array1.length; i++) {
-                    insert(array1[i]);
-                }
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
     }
 
     private final static String SPACE = "    "; // four spaces for indentation
@@ -130,6 +147,4 @@ public class ahnaf_table {
         System.out.println(String.format("%s%s", SPACE.repeat(level), current.word));
         printSideways(current.left, level + 1);
     }
-}
-
 }
